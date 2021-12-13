@@ -116,6 +116,8 @@ class Matrix(object):
         """
         Returns a transposed copy of this Matrix.
         """
+        
+        """
         matrix_transpose = []
         # Loop through columns on outside loop
         for c in range(self.h):
@@ -125,6 +127,21 @@ class Matrix(object):
             # Column values will be filled by what were each row before
                 new_row.append(self[r][c])
             matrix_transpose.append(new_row)
+        """
+        matrix_transpose = []
+
+        new_col_count = self.h
+        new_row_count = self.w
+
+        for i in range(new_row_count):
+            new_row = []
+
+            for j in range(new_col_count):
+                new_row.append(self.g[j][i])
+
+            matrix_transpose.append(new_row)    
+        
+        
         
         return Matrix(matrix_transpose)
 
@@ -269,13 +286,37 @@ class Matrix(object):
         #   
         # TODO - your code here
         #
+        """
         C = [[0 for row in range(self.h)] for col in range(other.w)]
         for i in range(self.h):
             for j in range(other.w):
                 for k in range(other.h):
                     C[i][j] += self[i][k]*other[k][j]
-       
-        return Matrix(C)  
+                    
+                    
+        """
+        
+        product = []
+
+        transp_b = other.T()
+
+        if self.w != other.h:   # Verify 1:1 relation of own column count vs other's row count
+            raise (ValueError, "Matrices can only be multiplied if the own row count matches the other's column count")
+
+        for row_index in range(self.h):
+            new_row = []
+
+            for col_index in range(transp_b.h):
+                # calculate dot product of both given vectors
+                result = 0.
+                for a, b in zip(self.g[row_index], transp_b.g[col_index]):
+                    result += a * b
+
+                new_row.append(result)
+
+            product.append(new_row)
+
+        return Matrix(product)  
             
     def __rmul__(self, other):
         """
